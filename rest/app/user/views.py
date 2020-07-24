@@ -5,6 +5,9 @@ from rest_framework.permissions import AllowAny
 from rest.app.user.serializers import UserRegistrationSerializer
 from rest.app.user.serializers import UserLoginSerializer
 
+import logging
+logger = logging.getLogger("mylogger")
+
 
 class UserRegistrationView(CreateAPIView):
     serializer_class = UserRegistrationSerializer
@@ -28,13 +31,14 @@ class UserLoginView(RetrieveAPIView):
     serializer_class = UserLoginSerializer
 
     def post(self, request):
+        logger.info(request.data)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         response = {
             'success': 'True',
             'status code': status.HTTP_200_OK,
             'message': 'User logged in  successfully',
-            'token': serializer.data['token'],
+            'accessToken': serializer.data['token'],
         }
         status_code = status.HTTP_200_OK
 
